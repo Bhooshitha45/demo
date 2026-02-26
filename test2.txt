@@ -1,0 +1,26 @@
+#include <SoftwareSerial.h>
+#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+SoftwareSerial bt(10, 11);
+DHT dht(DHTPIN, DHTTYPE);
+void setup() {
+  Serial.begin(9600);
+  bt.begin(9600);
+  dht.begin();
+}
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+  if (isnan(temp) || isnan(hum)) {
+    Serial.println("Sensor Error");
+    return;
+  }
+  bt.print("Temperature: ");
+  bt.print(temp);
+  bt.print(" °C  ");
+  bt.print("Humidity: ");
+  bt.print(hum);
+  bt.println(" %");
+  delay(2000);
+}
