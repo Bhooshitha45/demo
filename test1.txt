@@ -1,1 +1,26 @@
-test created
+#include <WiFi.h>
+#include <HTTPClient.h>
+const char* ssid = "IOT";
+const char* password = "gasc@1968";
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi Connected!");
+}
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin("http://api.thingspeak.com/channels/3213221/fields/1/last.json?api_key=FRP476DYNW2JWDYZ");   
+    int httpCode = http.GET();
+    if (httpCode > 0) {
+      String payload = http.getString();
+      Serial.println(payload);   // Print only JSON
+    }
+    http.end();
+  }
+  delay(15000);  
+}
